@@ -1,0 +1,19 @@
+{
+    "todos": [
+        {
+            "id": "ef4b5797-6283-415c-968b-b0bc17f6a9b7",
+            "titulo": "test",
+            "completada": true
+        },
+        {
+            "id": "7bdb4fbf-b754-4ab7-99fa-c29fa01fe28a",
+            "titulo": "ingles",
+            "completada": true
+        },
+        {
+            "id": "3dd48144-0f33-4fad-9972-d417177686e2",
+            "titulo": "espa\u00f1ol",
+            "completada": true
+        }
+    ]
+}
