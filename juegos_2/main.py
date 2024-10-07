@@ -1,8 +1,9 @@
 import pygame 
-
+from player import Player
+from config import Config
 pygame.init()
 
-screen = pygame.display.set_mode((800,600), flags=pygame.SCALED, vsync=1)
+screen = pygame.display.set_mode((Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT), flags=pygame.SCALED, vsync=1)
 
 running = True
 
@@ -16,16 +17,20 @@ bg_color = [0,0,0]
 
 clock =pygame.time.Clock()
 
-PLAYER_MAX_SPEED = 500
-
-player_2_coord_x = 750
-player_2_coord_y = 225
-player_2_speed = 0
-
-
-player_1_coord_x = 15
-player_1_coord_y = 225
-player_1_speed = 0
+player_1 = Player (
+    screen,
+      Config.PLAYER_BORDERDISTANCE,
+        (Config.SCREEN_WIDTH/2) - (Config.PLAYER_HEIGHT/2),
+        Config.PLAYER_WIDTH,
+        Config.PLAYER_HEIGHT
+      )
+player_2 = Player (
+    screen,
+      Config.SCREEN_WIDTH - Config.PLAYER_BORDERDISTANCE - Config.PLAYER_WIDTH,
+        (Config.SCREEN_WIDTH/2) - (Config.PLAYER_HEIGHT/2),
+        Config.PLAYER_WIDTH,
+        Config.PLAYER_HEIGHT
+        )
 
 
 while running:
@@ -35,40 +40,23 @@ while running:
             
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                player_1_speed = -PLAYER_MAX_SPEED
+                player_1.set_velocidad(Config.PLAYER_MAX_SPEED * -1)
             if event.key == pygame.K_s:
-                player_1_speed = PLAYER_MAX_SPEED
-
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                player_1_speed = 0
-            if event.key == pygame.K_s:
-                player_1_speed = 0
+                player_1.set_velocidad(Config.PLAYER_MAX_SPEED)
+            if event.key == pygame.K_UP:
+                player_2.set_velocidad(Config.PLAYER_MAX_SPEED * -1)
+            if event.key == pygame.K_DOWN:
+                    player_2.set_velocidad(Config.PLAYER_MAX_SPEED)
         
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player_2_speed = -PLAYER_MAX_SPEED
-            if event.key == pygame.K_DOWN:
-                player_2_speed = PLAYER_MAX_SPEED
-
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                player_2_speed = 0
-            if event.key == pygame.K_DOWN:
-                player_2_speed = 0
-
-
+            if event.key == pygame.K_w or event.key == pygame.K_s:
+                player_1.set_velocidad(0)
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                player_2.set_velocidad(0)
 
     delta_time = clock.tick(60) / 1000
-
-
-    player_1_coord_y += player_1_speed * delta_time
-
-    if player_1_coord_y < 0:
-        player_1_coord_y = 0
-
-    if player_1_coord_y > 450:
-        player_1_coord_y = 450
+    player_1.move(delta_time)
+    player_2.move(delta_time)
 
     pelota_coord_y += pelota_speed_y * delta_time
 
@@ -85,8 +73,9 @@ while running:
 
     screen.fill(bg_color)
     
-    pygame.draw.rect(screen, "white", (player_1_coord_x, player_1_coord_y, 25, 150))
-    pygame.draw.rect(screen, "white", (player_2_coord_x, player_2_coord_y, 25, 150))
+    #pygame.draw.rect(screen, "white", (player_1_coord_x, player_1_coord_y, 25, 150))
+    player_1.draw()
+    player_2.draw()
     pygame.draw.rect(screen, "white",(pelota_coord_x, pelota_coord_y, 20, 20))
     pygame.display.flip()
     
